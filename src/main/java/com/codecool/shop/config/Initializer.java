@@ -7,23 +7,31 @@ import com.codecool.shop.dao.implementation.*;
 import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+
 @WebListener
 public class Initializer implements ServletContextListener {
 
+    private static final Logger logger = LoggerFactory.getLogger(ServletContextListener.class);
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        logger.info("Retrieving DAO instances");
         ProductDao productDataStore = ProductDaoDB.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoDB.getInstance();
         SupplierDao supplierDataStore = SupplierDaoDB.getInstance();
+        logger.info("Removing existing data from tables");
         productDataStore.removeAllProducts();
         productCategoryDataStore.removeAll();
         supplierDataStore.removeAll();
 
+        logger.info("Filling up tables with data");
         //setting up a new supplier
         Supplier mentorBence = new Supplier("Bence", "Mouse-less computer user");
         supplierDataStore.add(mentorBence);
